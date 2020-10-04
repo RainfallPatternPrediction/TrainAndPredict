@@ -6,33 +6,31 @@ import numpy as np
 TrainData = 10000 #total training data
 #data parsing
 def createDataset(IMAGE_FILES):# glob file
-    def flat(arr):
-        a = []
-        parse = lambda x: x/255
-        for i in arr:
-            a.append(parse(i.flatten()))
-        return np.array(a)
+    def filterFeatures(arr):
+        for index,color_rgb in enumerate(arr):
+            arr[index] = 0 if color_rgb[0] != 30 else color_rgb[2]/255
+        return arr
     glob_files = glob.glob(IMAGE_FILES)
     #converting to black and white
     pixelValue = list()
     for index in range(len(glob_files)):
         newfile = glob_files[index]
         img = Image.open(newfile)
-        img = img.convert('L')
-        pixelValue.append(list(img.getdata()))#containes data for all images
+        img_val = filterFeatures(list(img.getdata()))#current image data
+        pixelValue.append(img_val)#containes data for all images
         img.close()
-    X,y = [],[]
+    x,y = [],[]
     #input and desired outputs
     for i in range(0,TrainData):
         rand = random.randint(0,len(pixelValue)-2)
-        X.append(pixelValue[rand])
+        x.append(pixelValue[rand])
         y.append(pixelValue[rand+1])
-    X = flat(np.array(X).reshape(-1,180,360))
-    y = flat(np.array(y).reshape(-1,180,360))
-    return X,y
+    x = np.array(x).reshape(-1,64800,)
+    y = np.array(y).reshape(-1,64800,)
+    return x,y
 X,y = createDataset("F:\\imagesTrain\\*.png")#change for your location of the parsed images
 print("got all image Data")
-# #Shape of the model
+#Shape of the model
 model = keras.Sequential([
     keras.layers.Input(shape=(64800,)),
     keras.layers.Dense(units=10000, activation='relu'),
