@@ -27,8 +27,6 @@ def createDataset(IMAGE_FILES1,TrainData): # GLOB PATHS
         print("random values for training",rand)
     x = np.array(x)
     print(x.shape)
-    # x = x.reshape((-1,60,120,1))
-    # print(x.shape)
     return x,r
 def Train(dataPath,TrainData,save):
     X,imagesTrainID = createDataset(dataPath,TrainData)
@@ -47,4 +45,4 @@ def Train(dataPath,TrainData,save):
     #saves the ANN
     model.save(f'{save}.h5')
 
-Train("F:\\Convolution\\*.png",2500,"Models/RainFall_Denoise_Conv")
+Train("F:\\Convolution\\*.png",2500,"Models/RainFall_Denoise")
